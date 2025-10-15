@@ -11,7 +11,15 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional } from "class-validator";
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  ValidateNested,
+} from "class-validator";
+import { OrderCreateNestedManyWithoutUsersInput } from "./OrderCreateNestedManyWithoutUsersInput";
+import { Type } from "class-transformer";
+import { ReviewCreateNestedManyWithoutUsersInput } from "./ReviewCreateNestedManyWithoutUsersInput";
 import { IsJSONValue } from "@app/custom-validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
@@ -27,18 +35,18 @@ class UserCreateInput {
   @Field(() => String, {
     nullable: true,
   })
-  email?: string | null;
+  firstName?: string | null;
 
   @ApiProperty({
     required: false,
-    type: String,
+    type: Boolean,
   })
-  @IsString()
+  @IsBoolean()
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => Boolean, {
     nullable: true,
   })
-  firstName?: string | null;
+  isAdmin?: boolean | null;
 
   @ApiProperty({
     required: false,
@@ -52,12 +60,36 @@ class UserCreateInput {
   lastName?: string | null;
 
   @ApiProperty({
+    required: false,
+    type: () => OrderCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => OrderCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => OrderCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  orders?: OrderCreateNestedManyWithoutUsersInput;
+
+  @ApiProperty({
     required: true,
     type: String,
   })
   @IsString()
   @Field(() => String)
   password!: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => ReviewCreateNestedManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => ReviewCreateNestedManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => ReviewCreateNestedManyWithoutUsersInput, {
+    nullable: true,
+  })
+  reviews?: ReviewCreateNestedManyWithoutUsersInput;
 
   @ApiProperty({
     required: true,

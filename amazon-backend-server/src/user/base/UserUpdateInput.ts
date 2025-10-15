@@ -11,7 +11,15 @@ https://docs.amplication.com/how-to/custom-code
   */
 import { InputType, Field } from "@nestjs/graphql";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsOptional } from "class-validator";
+import {
+  IsString,
+  IsOptional,
+  IsBoolean,
+  ValidateNested,
+} from "class-validator";
+import { OrderUpdateManyWithoutUsersInput } from "./OrderUpdateManyWithoutUsersInput";
+import { Type } from "class-transformer";
+import { ReviewUpdateManyWithoutUsersInput } from "./ReviewUpdateManyWithoutUsersInput";
 import { IsJSONValue } from "@app/custom-validators";
 import { GraphQLJSON } from "graphql-type-json";
 import { InputJsonValue } from "../../types";
@@ -27,18 +35,18 @@ class UserUpdateInput {
   @Field(() => String, {
     nullable: true,
   })
-  email?: string | null;
+  firstName?: string | null;
 
   @ApiProperty({
     required: false,
-    type: String,
+    type: Boolean,
   })
-  @IsString()
+  @IsBoolean()
   @IsOptional()
-  @Field(() => String, {
+  @Field(() => Boolean, {
     nullable: true,
   })
-  firstName?: string | null;
+  isAdmin?: boolean | null;
 
   @ApiProperty({
     required: false,
@@ -53,6 +61,18 @@ class UserUpdateInput {
 
   @ApiProperty({
     required: false,
+    type: () => OrderUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => OrderUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => OrderUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  orders?: OrderUpdateManyWithoutUsersInput;
+
+  @ApiProperty({
+    required: false,
     type: String,
   })
   @IsString()
@@ -61,6 +81,18 @@ class UserUpdateInput {
     nullable: true,
   })
   password?: string;
+
+  @ApiProperty({
+    required: false,
+    type: () => ReviewUpdateManyWithoutUsersInput,
+  })
+  @ValidateNested()
+  @Type(() => ReviewUpdateManyWithoutUsersInput)
+  @IsOptional()
+  @Field(() => ReviewUpdateManyWithoutUsersInput, {
+    nullable: true,
+  })
+  reviews?: ReviewUpdateManyWithoutUsersInput;
 
   @ApiProperty({
     required: false,
